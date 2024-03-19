@@ -38,9 +38,10 @@ async def read_items(skip:int = 0, limit:int = 10):
     
 
 @app.get("/items/{item_id}")
-def read_item(item_id: int, q: str| None):
-    return {"item_id": item_id, "q": q}
-
+async def read_item(item_id: int, q: str| None):
+    if q:
+        return {"item_id": item_id, "q": q}
+    return {"item_id":item_id}
 
 @app.put("/items/{item_id}")
 def update_item(item_id: int, item: Item):
