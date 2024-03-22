@@ -11,6 +11,5 @@ async def read_items(
     q: Annotated[str | None, Query(alias="item-query")] = None,
 ):
     results = {"item_id": item_id}
-    if q:
-        results.update({"q": q})
+    if q: results.update({"q": q})
     return results
