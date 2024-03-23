@@ -12,4 +12,5 @@ async def read_items(
 ):
     results = {"item_id": item_id}
     if q: results.update({"q": q})
+    print("CHANGE NOTHING WAITING FOR TIME TODO List")
     return results
