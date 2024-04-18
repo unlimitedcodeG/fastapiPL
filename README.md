@@ -1,2 +1,0 @@
-# fastapiPL
-personal learning
