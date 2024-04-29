@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Non-Overlapping Grandfather-Grandson Relationship</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+  </head>
+  <body>
+    <svg width="800" height="200"></svg>
+    <script>
+      var svg = d3.select("svg"),
+        width = +svg.attr("width"),
+        height = +svg.attr("height");
+
+      var nodes = [
+        { id: "Grandfather", group: 1, x: (width * 1) / 4, y: height / 2 },
+        { id: "Father", group: 2, x: (width * 2) / 4, y: height / 2 },
+        { id: "Son", group: 3, x: (width * 3) / 4, y: height / 2 },
+      ];
+
+      var links = [
+        { source: "Grandfather", target: "Father", type: "Father-Son" },
+        { source: "Father", target: "Son", type: "Father-Son" },
+      ];
+
+      // 添加爷孙曲线的路径
+      var grandfatherGrandsonPath = svg
+        .append("path")
+        .attr(
+          "d",
+          d3.line()([
+            [nodes[0].x, nodes[0].y],
+            [nodes[0].x + (nodes[2].x - nodes[0].x) / 2, nodes[0].y - 50],
+            [nodes[2].x, nodes[2].y],
+          ])
+        )
+        .attr("stroke", "blue")
+        .attr("fill", "none")
+        .attr("marker-end", "url(#arrow)");
+
+      var link = svg
+        .selectAll(".link")
+        .data(links)
+        .enter()
+        .append("line")
+        .attr("class", "link")
+        .attr("x1", function (d) {
+          return nodes.find((n) => n.id === d.source).x;
+        })
+        .attr("y1", function (d) {
+          return nodes.find((n) => n.id === d.source).y;
+        })
+        .attr("x2", function (d) {
+          return nodes.find((n) => n.id === d.target).x;
+        })
+        .attr("y2", function (d) {
+          return nodes.find((n) => n.id === d.target).y;
+        })
+        .attr("stroke", "black");
+
+      var node = svg.selectAll(".node").data(nodes).enter().append("g");
+
+      node
+        .append("circle")
+        .attr("r", 20)
+        .attr("fill", function (d) {
+          return d.group === 1 ? "red" : d.group === 2 ? "green" : "blue";
+        })
+        .attr("cx", function (d) {
+          return d.x;
+        })
+        .attr("cy", function (d) {
+          return d.y;
+        });
+
+      node
+        .append("text")
+        .attr("dy", -25)
+        .attr("text-anchor", "middle")
+        .text(function (d) {
+          return d.id;
+        })
+        .attr("x", function (d) {
+          return d.x;
+        })
+        .attr("y", function (d) {
+          return d.y;
+        });
+
+      // 定义箭头
+      svg
+        .append("defs")
+        .append("marker")
+        .attr("id", "arrow")
+        .attr("viewBox", "0 -5 10 10")
+        .attr("refX", 5)
+        .attr("markerWidth", 6)
+        .attr("markerHeight", 6)
+        .attr("orient", "auto")
+        .append("path")
+        .attr("d", "M0,-5L10,0L0,5")
+        .attr("fill", "black");
+    </script>
+  </body>
+</html>
